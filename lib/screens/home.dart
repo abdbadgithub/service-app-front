@@ -7,6 +7,7 @@ import '../classes/album.dart';
 import 'package:http/http.dart' as http;
 
 Future<Album> fetchAlbum() async {
+
   final response = await http.get(Uri.parse('http://localhost:3000/user/1'));
 
   if (response.statusCode == 200) {

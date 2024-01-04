@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:service_app/widgets/CustomBtn.dart';
+import 'package:service_app/widgets/statefull/CustomBtn.dart';
 
 class Services extends StatefulWidget {
   const Services({super.key});

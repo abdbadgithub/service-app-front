@@ -10,13 +10,13 @@ class TextDesign extends StatelessWidget {
     if(type == "title")
       return
         Text(text, style: const TextStyle(
-            fontSize: 12,
+            fontSize: 14,
             fontFamily: 'aljazira',
             fontWeight: FontWeight.bold),
         );
      if(type == "text")
       return Text(text, style: const TextStyle(
-      fontSize: 12,
+      fontSize: 14,
       fontFamily: 'aljazira',
       color: constants.lightGrey,
           fontWeight: FontWeight.normal));

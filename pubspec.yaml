@@ -58,7 +58,10 @@ flutter:
     - assets/img/header-bg.png
     - assets/icons/add.svg
     - assets/icons/paper.svg
-    - assets/icons/watch.svg
+    - assets/icons/status/waiting.svg
+    - assets/icons/status/done.svg
+    - assets/icons/status/rejected.svg
+    - assets/icons/search_settings.svg
   fonts:
       - family: aljazira
         fonts:

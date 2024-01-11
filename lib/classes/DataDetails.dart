@@ -21,8 +21,8 @@ class DataDetails {
   final String WorkType;
   final int EducationLevel;
   final Mouaref mouaref;
-  final int? CV_Link_text;
-  final int? Identity_Link_text;
+  final String? CV_Link_text;
+  final String? Identity_Link_text;
   final int? CV_College;
   final int? CV_Grade;
   final int? CV_Major;
@@ -46,7 +46,7 @@ class DataDetails {
     required this.WorkLocation,
     required this.WorkAddress,
     required this.WorkType,
-     required this.EducationLevel,
+    required this.EducationLevel,
     required this.mouaref,
     this.CV_Link_text,
     this.Identity_Link_text,
@@ -76,8 +76,8 @@ class DataDetails {
       WorkType: json['WorkType'] as String,
       EducationLevel: json['EducationLevel'],
       mouaref: Mouaref.fromJson(json['Mouaref']),
-      CV_Link_text: json['CV_Link_text'] as int?,
-      Identity_Link_text: json['Identity_Link_text'] as int?,
+      CV_Link_text: json['CV_Link_text'],
+      Identity_Link_text:json['Identity_Link_text'],
       CV_College: json['CV_College'] as int?,
       CV_Grade: json['CV_Grade'] as int?,
       CV_Major: json['CV_Major'] as int?,

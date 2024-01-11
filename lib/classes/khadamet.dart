@@ -3,6 +3,8 @@ import 'Khadamet_Status.dart';
 import 'Khadamet_Subject.dart';
 import 'Khadamet_Type.dart';
 import 'KhedmehResponsibleOffice.dart';
+import 'data.dart';
+import 'khadametdetails.dart';
 
 class Khadamet {
   final int idKhedmet;
@@ -17,6 +19,7 @@ class Khadamet {
   final int? khedmetType;
   final int? khedmetCompany;
   final String? khedmetCompanyDetails;
+  final Data? data; // Assuming you have a Data class
   final KhadametCompany? khadametCompany; // Assuming you have a KhadametCompany class
   final KhadametStatus? khadametStatus; // Assuming you have a KhadametStatus class
   final KhadametSubject? khadametSubject; // Assuming you have a KhadametSubject class
@@ -36,6 +39,7 @@ class Khadamet {
     this.khedmetType,
     this.khedmetCompany,
     this.khedmetCompanyDetails,
+    this.data,
     this.khadametCompany,
     this.khadametStatus,
     this.khadametSubject,
@@ -44,7 +48,14 @@ class Khadamet {
   });
 
   factory Khadamet.fromJson(Map<String, dynamic> json) {
-
+    var data;
+    if (json.containsKey('Data') && json['Data'] != null) {
+      data = Data.fromJson(json['Data']);
+    } else {
+      // Handle the case where 'data' does not exist or is null
+      // For example, initialize it with a default value or keep it null
+      data = null; // or provide a default value
+    }
     return Khadamet(
       idKhedmet: json['IdKhedmet'],
       idUser: json['IdUser'],
@@ -58,6 +69,7 @@ class Khadamet {
       khedmetType: json['KhedmetType'],
       khedmetCompany: json['KhedmetCompany'],
       khedmetCompanyDetails: json['KhedmetCompanyDetails'],
+      data: data,
       khadametCompany: json['Khadamet_Company'] != null ? KhadametCompany.fromJson(json['Khadamet_Company']) : null,
       khadametStatus: json['Khadamet_Status'] != null ? KhadametStatus.fromJson(json['Khadamet_Status']) : null,
       khadametSubject: json['Khadamet_Subject'] != null ? KhadametSubject.fromJson(json['Khadamet_Subject']) : null,

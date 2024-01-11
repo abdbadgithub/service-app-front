@@ -64,11 +64,24 @@ class Data {
     //   details = [];
     // }
 
-
-    var dataDetailsList = json['DataDetails'] as List;
-      List<DataDetails> details = dataDetailsList.map((i) => DataDetails.fromJson(i)).toList();
-    var khadametList = json['Khadamet'] as List;
-    List<Khadamet> khadamet = khadametList.map((i) => Khadamet.fromJson(i)).toList();
+    List<DataDetails> details;
+    List<Khadamet> khadamet;
+    if (json.containsKey('DataDetails') && json['DataDetails'] != null) {
+      var dataDetailsList = json['DataDetails'] as List;
+       details = dataDetailsList.map((i) => DataDetails.fromJson(i)).toList();
+    } else {
+      details = []; // or provide a default value
+    }
+    if (json.containsKey('Khadamet') && json['Khadamet'] != null) {
+      var khadametList = json['Khadamet'] as List;
+      khadamet = khadametList.map((i) => Khadamet.fromJson(i)).toList();
+    } else {
+      khadamet = []; // or provide a default value
+    }
+    // var dataDetailsList = json['DataDetails'] as List;
+    //   List<DataDetails> details = dataDetailsList.map((i) => DataDetails.fromJson(i)).toList();
+    // var khadametList = json['Khadamet'] as List;
+    // List<Khadamet> khadamet = khadametList.map((i) => Khadamet.fromJson(i)).toList();
 
     return Data(
       userId: json['User_ID'],

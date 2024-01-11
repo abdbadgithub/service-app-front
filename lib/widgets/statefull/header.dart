@@ -1,4 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart' as http;
+import 'package:service_app/widgets/statefull/serviceCard.dart';
+import '../../classes/khadametBasic.dart';
+import '../../screens/services.dart';
+Future<List<KhadametBasic>> fetchSearchService(query) async {
+  final response = await http.get(Uri.parse('http://localhost:3000/services/search?query=${query}'));
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    List<dynamic> dataJson = json.decode(response.body);
+    return dataJson.map((json) => KhadametBasic.fromJson(json)).toList();
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load album');
+  }
+}
 class Header extends StatefulWidget {
   const Header({super.key});
 
@@ -7,6 +28,13 @@ class Header extends StatefulWidget {
 }
 
 class _Header extends State<Header> {
+  final TextEditingController _controller = TextEditingController();
+  String? _searchingWithQuery;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,33 +66,35 @@ class _Header extends State<Header> {
           margin: const EdgeInsets.only(top: 20.0),
           child: SearchAnchor(
               builder: (BuildContext context, SearchController controller) {
-            return SearchBar(
-              controller: controller,
-              hintText: 'ابحث عن خدمات او شخص',
-              padding: const MaterialStatePropertyAll<EdgeInsets>(
-                  EdgeInsets.symmetric(horizontal: 16.0)),
-              onTap: () {
-                controller.openView();
-              },
-              onChanged: (_) {
-                controller.openView();
-              },
-              leading: const Icon(Icons.search),
-              trailing: const <Widget>[],
-            );
-          }, suggestionsBuilder:
-                  (BuildContext context, SearchController controller) {
-            return List<ListTile>.generate(5, (int index) {
-              final String item = 'item $index';
-              return ListTile(
-                title: Text(item),
-                onTap: () {
-                  setState(() {
-                    controller.closeView(item);
-                  });
-                },
-              );
-            });
+                return SearchBar(
+                  controller: controller,
+                  hintText: 'ابحث عن خدمات او شخص',
+                  padding: const MaterialStatePropertyAll<EdgeInsets>(
+                      EdgeInsets.symmetric(horizontal: 16.0)),
+                  onTap: () {
+                    controller.openView();
+                  },
+                  onChanged: (_) {
+                    controller.openView();
+                  },
+                  leading: const Icon(Icons.search),
+                  trailing: <Widget>[
+                    Tooltip(
+                      message: 'Change brightness mode',
+                      child: IconButton(
+                        icon: SvgPicture.asset("assets/icons/search_settings.svg"),
+                        onPressed: () {  },
+                      ),
+                    )
+                  ],
+                );
+              }, suggestionsBuilder:
+              (BuildContext context, SearchController controller)  async{
+                _searchingWithQuery = controller.text;
+                return fetchSearchService(_searchingWithQuery).then((suggestions) {
+                  return suggestions.map((suggestion) =>
+                      ServiceCard(khedme:suggestion));
+                });
           }),
         ),
       ]),

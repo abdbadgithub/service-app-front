@@ -1,43 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:service_app/constants.dart' as constants;
-
-import '../../classes/data.dart';
+import '../../classes/khadametBasic.dart';
+import 'modal.dart';
 
 class ServiceCard extends StatelessWidget {
-  final Data data;
+  final KhadametBasic khedme;
 
-  const ServiceCard({Key? key, required this.data}) : super(key: key);
+  const ServiceCard({Key? key, required this.khedme}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var fullName = '${data.name} ${data.midlename} ${data.lastName}';
+    var screenSize = MediaQuery.of(context).size;
+    var fullName =
+        '${khedme.data?.name} ${khedme.data?.midlename} ${khedme.data?.lastName}';
+    var statusColor;
+    var statusIcon;
+    var statusTextColor;
+    var statusText;
+    if (khedme.khadametStatus?.statusId == 1) {
+      statusColor = constants.superLightGrey;
+      statusIcon = "assets/icons/status/waiting.svg";
+      statusTextColor = constants.lightGrey;
+      statusText = "بالانتظار";
+    } else if (khedme.khadametStatus?.statusId == 2) {
+      statusColor = constants.lightGreen;
+      statusIcon = "assets/icons/status/done.svg";
+      statusTextColor = constants.green;
+      statusText = "تم التنفيذ";
+    } else if (khedme.khadametStatus?.statusId == 4) {
+      statusColor = constants.lightRed;
+      statusIcon = "assets/icons/status/rejected.svg";
+      statusTextColor = constants.red;
+      statusText = "تم الرفض";
+    } else {
+      statusColor = constants.superLightGrey;
+      statusIcon = "assets/icons/status/waiting.svg";
+      statusTextColor = constants.lightGrey;
+      statusText = "بالانتظار";
+    }
     return InkWell(
         onTap: () {
-          showDialog<String>(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title:  Text('AlertDialog Title ${data.userId}'),
-              content: const Text('AlertDialog description'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'OK'),
-                  child: const Text('OK'),
-                ),
-              ],
-            ),
-          );
+          showCustomModalBottomSheet(context, khedme.idKhedmet);
         },
         child: Container(
           height: 90,
           margin: const EdgeInsets.only(bottom: 5),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              color: constants.superLightGrey,
+              color: statusColor,
               borderRadius: BorderRadius.all(
                 Radius.circular(20.0),
               )),
@@ -70,7 +81,7 @@ class ServiceCard extends StatelessWidget {
                         fontFamily: 'aljazira',
                         fontWeight: FontWeight.bold),
                   ),
-                  Text('نوع الخدمة : سجل عدلي',
+                  Text('${khedme.khadametSubject?.subjectName}',
                       style: TextStyle(
                           fontSize: 12,
                           color: constants.lightGrey,
@@ -87,13 +98,13 @@ class ServiceCard extends StatelessWidget {
                       Radius.circular(10.0),
                     )),
                 child: Row(children: [
-                  SvgPicture.asset("assets/icons/watch.svg"),
+                  SvgPicture.asset(statusIcon),
                   const SizedBox(width: 10),
-                  const Text(
-                    'بالانتظار',
+                  Text(
+                    statusText,
                     style: TextStyle(
                         fontSize: 12,
-                        color: constants.grey,
+                        color: statusTextColor,
                         fontFamily: 'aljazira',
                         fontWeight: FontWeight.w400),
                   ),
@@ -104,3 +115,4 @@ class ServiceCard extends StatelessWidget {
         ));
   }
 }
+

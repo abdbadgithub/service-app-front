@@ -18,6 +18,7 @@ class _CustomLayout extends State<CustomLayout> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           GlobalCupertinoLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -36,9 +37,11 @@ class _CustomLayout extends State<CustomLayout> {
           body: Column(children: <Widget>[
             const Header(),
             if (widget.child != null)
-              Expanded(child: SingleChildScrollView(child:widget.child!)),
-            Align(
+              Expanded(child: SingleChildScrollView(child: widget.child!)),
+            Container(
                 alignment: Alignment.centerLeft,
+                width: MediaQuery.of(context).size.width * 0.9,
+                margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: FloatingActionButton(
                     onPressed: () {
                       // Add your onPressed code here!

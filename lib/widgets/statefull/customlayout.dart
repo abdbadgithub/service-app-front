@@ -34,24 +34,35 @@ class _CustomLayout extends State<CustomLayout> {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: Scaffold(
-          body: Column(children: <Widget>[
-            const Header(),
-            if (widget.child != null)
-              Expanded(child: SingleChildScrollView(child: widget.child!)),
-            Container(
-                alignment: Alignment.centerLeft,
-                width: MediaQuery.of(context).size.width * 0.9,
-                margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: FloatingActionButton(
-                    onPressed: () {
-                      // Add your onPressed code here!
-                    },
-                    backgroundColor: constants.primaryColor,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(100))),
-                    child: SvgPicture.asset("assets/icons/add.svg"))),
-          ]),
-          bottomNavigationBar: const Footer(),
-        ));
+            body: Localizations.override(
+                context: context,
+                locale: const Locale('ar'),
+                child: Builder(builder: (context) {
+                  return Column(children: <Widget>[
+                    const Header(),
+                    if (widget.child != null)
+                      Expanded(
+                          child: SingleChildScrollView(child: widget.child!)),
+                    Container(
+                        alignment: Alignment.centerLeft,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                        child: FloatingActionButton(
+                            onPressed: () {
+                              // Add your onPressed code here!
+                            },
+                            backgroundColor: constants.primaryColor,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100))),
+                            child: SvgPicture.asset("assets/icons/add.svg"))),
+                  ]);
+                })),
+            bottomNavigationBar: Localizations.override(
+                context: context,
+                locale: const Locale('ar'),
+                child: Builder(builder: (context) {
+                  return const Footer();
+                }))));
   }
 }

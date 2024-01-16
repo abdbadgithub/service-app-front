@@ -40,10 +40,6 @@ Future<void> showCustomModalBottomSheet(BuildContext context, int id) async {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ListTile(
-                    leading: Icon(Icons.ac_unit),
-                    title: Text('Item 1'),
-                  ),
-                  ListTile(
                     leading: TextDesign(text: 'رقم ومكان السجل', type: 'title'),
                     title: TextDesign(
                         text: sejelnumber + ' ' + data.data!.sejelPlace!.spName,
@@ -140,7 +136,7 @@ Future<void> showCustomModalBottomSheet(BuildContext context, int id) async {
 
 Future<Khadamet> fetchServiceDetails(id) async {
   final response =
-      await http.get(Uri.parse('http://localhost:3000/services/$id'));
+      await http.get(Uri.parse('${constants.api}services/$id'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,

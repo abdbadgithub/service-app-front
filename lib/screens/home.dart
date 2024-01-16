@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:service_app/classes/khadamet.dart';
 import 'package:service_app/screens/services.dart';
 import 'package:service_app/constants.dart' as constants;
 import 'package:http/http.dart' as http;
@@ -10,7 +9,7 @@ import '../widgets/statefull/serviceCard.dart';
 import '../widgets/ui/circleTabIndicator.dart';
 
 Future<List<KhadametBasic>> fetchUsersWaiting() async {
-  final response = await http.get(Uri.parse('http://localhost:3000/services/waiting'));
+  final response = await http.get(Uri.parse('${constants.api}services/waiting'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
@@ -24,7 +23,7 @@ Future<List<KhadametBasic>> fetchUsersWaiting() async {
   }
 }
 Future<List<KhadametBasic>> fetchUsersRejected() async {
-  final response = await http.get(Uri.parse('http://localhost:3000/services/rejected'));
+  final response = await http.get(Uri.parse('${constants.api}services/rejected'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
@@ -38,7 +37,7 @@ Future<List<KhadametBasic>> fetchUsersRejected() async {
   }
 }
 Future<List<KhadametBasic>> fetchUsersDone() async {
-  final response = await http.get(Uri.parse('http://localhost:3000/services/done'));
+  final response = await http.get(Uri.parse('${constants.api}services/done'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
@@ -91,13 +90,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           //For Selected tab
           tabs: const [
             Tab(
-              text: 'خدمات غير منفذة',
+              text: 'خدمات قيد الإنجاز',
             ),
             Tab(
-              text: 'خدمات مرفوضة',
+              text: 'خدمات للحفظ',
             ),
             Tab(
-              text: 'خدمات منفذة',
+              text: 'خدمات أنجزت',
             ),
           ],
           controller: _tabController,

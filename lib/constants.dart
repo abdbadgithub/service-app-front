@@ -9,3 +9,6 @@ const Color lightRed = Color.fromRGBO(222, 83, 83, 0.15);
 const Color red = Color(0xFFDE5353);
 const Color lightGreen = Color.fromRGBO(166, 207, 152, 0.15);
 const Color green = Color(0xFF96D580);
+//http://localhost:8080/
+//https://service-app.abdallahbadra.com/
+const String api = "http://localhost:8080/";

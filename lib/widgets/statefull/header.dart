@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -5,20 +6,25 @@ import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:service_app/widgets/statefull/serviceCard.dart';
 import '../../classes/khadametBasic.dart';
-import '../../screens/services.dart';
-Future<List<KhadametBasic>> fetchSearchService(query) async {
-  final response = await http.get(Uri.parse('http://localhost:3000/services/search?query=${query}'));
+import 'package:service_app/constants.dart' as constants;
+const Duration debounceDuration = Duration(milliseconds: 500);
+
+Future<List<KhadametBasic>?> fetchSearchService(query) async {
+  final response = await http.get(Uri.parse('${constants.api}services/search?query=${query}'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
-    List<dynamic> dataJson = json.decode(response.body);
-    return dataJson.map((json) => KhadametBasic.fromJson(json)).toList();
+    if(response.body.isNotEmpty) {
+      List<dynamic> dataJson = json.decode(response.body);
+      return dataJson.map((json) => KhadametBasic.fromJson(json)).toList();
+    }
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
-    throw Exception('Failed to load album');
+    throw Exception('Failed to load khadmet');
   }
+  return null;
 }
 class Header extends StatefulWidget {
   const Header({super.key});
@@ -28,11 +34,27 @@ class Header extends StatefulWidget {
 }
 
 class _Header extends State<Header> {
-  final TextEditingController _controller = TextEditingController();
-  String? _searchingWithQuery;
+  String? _currentQuery;
+  late Iterable<Widget> _lastOptions = <Widget>[];
+  late final _Debounceable<List<KhadametBasic>, String> _debouncedSearch;
+  Future<List<KhadametBasic>?> _search(String query) async {
+    _currentQuery = query;
+
+    // In a real application, there should be some error handling here.
+    final List<KhadametBasic>? options = await fetchSearchService(_currentQuery!);
+
+    // If another search happened after this one, throw away these options.
+    if (_currentQuery != query) {
+      return null;
+    }
+    _currentQuery = null;
+
+    return options;
+  }
   @override
   void initState() {
     super.initState();
+    _debouncedSearch = _debounce<List<KhadametBasic>, String>(_search);
   }
 
   @override
@@ -90,14 +112,70 @@ class _Header extends State<Header> {
                 );
               }, suggestionsBuilder:
               (BuildContext context, SearchController controller)  async{
-                _searchingWithQuery = controller.text;
-                return fetchSearchService(_searchingWithQuery).then((suggestions) {
-                  return suggestions.map((suggestion) =>
+               // _currentQuery = controller.text;
+                final List<KhadametBasic>? options =
+                (await _debouncedSearch(controller.text))?.toList();
+                if (options == null) {
+                  return _lastOptions;
+                }
+                  return options.map((suggestion) =>
                       ServiceCard(khedme:suggestion));
-                });
           }),
         ),
       ]),
     );
   }
+}
+typedef _Debounceable<S, T> = Future<S?> Function(T parameter);
+
+/// Returns a new function that is a debounced version of the given function.
+///
+/// This means that the original function will be called only after no calls
+/// have been made for the given Duration.
+_Debounceable<S, T> _debounce<S, T>(_Debounceable<S?, T> function) {
+  _DebounceTimer? debounceTimer;
+
+  return (T parameter) async {
+    if (debounceTimer != null && !debounceTimer!.isCompleted) {
+      debounceTimer!.cancel();
+    }
+    debounceTimer = _DebounceTimer();
+    try {
+      await debounceTimer!.future;
+    } catch (error) {
+      if (error is _CancelException) {
+        return null;
+      }
+      rethrow;
+    }
+    return function(parameter);
+  };
+}
+
+// A wrapper around Timer used for debouncing.
+class _DebounceTimer {
+  _DebounceTimer() {
+    _timer = Timer(debounceDuration, _onComplete);
+  }
+
+  late final Timer _timer;
+  final Completer<void> _completer = Completer<void>();
+
+  void _onComplete() {
+    _completer.complete();
+  }
+
+  Future<void> get future => _completer.future;
+
+  bool get isCompleted => _completer.isCompleted;
+
+  void cancel() {
+    _timer.cancel();
+    _completer.completeError(const _CancelException());
+  }
+}
+
+// An exception indicating that the timer was canceled.
+class _CancelException implements Exception {
+  const _CancelException();
 }

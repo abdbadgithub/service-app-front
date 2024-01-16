@@ -10,7 +10,7 @@ import 'package:service_app/constants.dart' as constants;
 const Duration debounceDuration = Duration(milliseconds: 500);
 
 Future<List<KhadametBasic>?> fetchSearchService(query) async {
-  final response = await http.get(Uri.parse('${constants.api}services/search?query=${query}'));
+  final response = await http.get(Uri.parse('${constants.api}services/search?query=$query'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,

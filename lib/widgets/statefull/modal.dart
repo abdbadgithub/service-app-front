@@ -7,6 +7,9 @@ import 'package:service_app/constants.dart' as constants;
 
 Future<void> showCustomModalBottomSheet(BuildContext context, int id) async {
   final data = await fetchServiceDetails(id);
+  if (!context.mounted) {
+    return; // Return if the widget is no longer in the widget tree
+  }
   String sejelnumber = data.data?.sejelNumber.toString() as String;
   var modalColor;
   if (data.khedmetStatus == 1) {

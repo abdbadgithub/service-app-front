@@ -67,7 +67,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     futureKhadametWaiting = fetchUsersWaiting();
     futureKhadametRejected = fetchUsersRejected();
     futureKhadametDone = fetchUsersDone();
@@ -90,13 +90,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           //For Selected tab
           tabs: const [
             Tab(
-              text: 'خدمات قيد الإنجاز',
+              text: 'قيد الإنجاز',
             ),
             Tab(
-              text: 'خدمات للحفظ',
+              text: 'للحفظ',
             ),
             Tab(
-              text: 'خدمات أنجزت',
+              text: 'أنجزت',
             ),
           ],
           controller: _tabController,
@@ -129,7 +129,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         ));
                       } else if (snapshot.hasData && snapshot.data!.isEmpty) {
                         // The data array is empty
-                        return Center(child: Text('No data available'));
+                        return const Center(child: Text('No data available'));
                       } else {
                         // By default, show a loading spinner
                         return const CircularProgressIndicator();
@@ -159,7 +159,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         ));
                       } else if (snapshot.hasData && snapshot.data!.isEmpty) {
                         // The data array is empty
-                        return Center(child: Text('No data available'));
+                        return const Center(child: Text('No data available'));
                       } else {
                         // By default, show a loading spinner
                         return const CircularProgressIndicator();
@@ -189,7 +189,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         ));
                       } else if (snapshot.hasData && snapshot.data!.isEmpty) {
                         // The data array is empty
-                        return Center(child: Text('No data available'));
+                        return const Center(child: Text('No data available'));
                       } else {
                         // By default, show a loading spinner
                         return const CircularProgressIndicator();

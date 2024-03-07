@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:service_app/widgets/statefull/CustomBtn.dart';
 
 class Services extends StatefulWidget {
   const Services({super.key});
@@ -18,15 +17,9 @@ class _ServiceState extends State<Services> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Second Screen"),
+        title: const Text("Second Screen"),
       ),
-      body: Center(
-          child: CustomBtn(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        buttonText: "TextButton",
-      )),
+      body: const Center(),
     );
   }
 }

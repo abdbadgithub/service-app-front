@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:service_app/constants.dart' as constants;
+
 import '../../classes/khadametBasic.dart';
 import 'modal.dart';
 
@@ -11,13 +12,12 @@ class ServiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
     var fullName =
         '${khedme.data?.name} ${khedme.data?.midlename} ${khedme.data?.lastName}';
-    var statusColor;
-    var statusIcon;
-    var statusTextColor;
-    var statusText;
+    Color statusColor;
+    String statusIcon;
+    Color statusTextColor;
+    String statusText;
     if (khedme.khadametStatus?.statusId == 1) {
       statusColor = constants.superLightGrey;
       statusIcon = "assets/icons/status/waiting.svg";
@@ -49,7 +49,7 @@ class ServiceCard extends StatelessWidget {
           decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               color: statusColor,
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(20.0),
               )),
           width: MediaQuery.of(context).size.width * 0.9,
@@ -74,7 +74,7 @@ class ServiceCard extends StatelessWidget {
                 children: [
                   Text(
                     fullName.length > 20
-                        ? fullName.substring(0, 20) + '...'
+                        ? '${fullName.substring(0, 20)}...'
                         : fullName,
                     style: const TextStyle(
                         fontSize: 16,
@@ -82,7 +82,7 @@ class ServiceCard extends StatelessWidget {
                         fontWeight: FontWeight.bold),
                   ),
                   Text('${khedme.khadametSubject?.subjectName}',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 12,
                           color: constants.lightGrey,
                           fontFamily: 'aljazira',
@@ -115,4 +115,3 @@ class ServiceCard extends StatelessWidget {
         ));
   }
 }
-

@@ -4,7 +4,6 @@ import 'Khadamet_Subject.dart';
 import 'Khadamet_Type.dart';
 import 'KhedmehResponsibleOffice.dart';
 import 'data.dart';
-import 'khadametdetails.dart';
 
 class Khadamet {
   final int idKhedmet;
@@ -20,11 +19,15 @@ class Khadamet {
   final int? khedmetCompany;
   final String? khedmetCompanyDetails;
   final Data? data; // Assuming you have a Data class
-  final KhadametCompany? khadametCompany; // Assuming you have a KhadametCompany class
-  final KhadametStatus? khadametStatus; // Assuming you have a KhadametStatus class
-  final KhadametSubject? khadametSubject; // Assuming you have a KhadametSubject class
+  final KhadametCompany?
+      khadametCompany; // Assuming you have a KhadametCompany class
+  final KhadametStatus?
+      khadametStatus; // Assuming you have a KhadametStatus class
+  final KhadametSubject?
+      khadametSubject; // Assuming you have a KhadametSubject class
   final KhadametType? khadametType; // Assuming you have a KhadametType class
-  final KhedmehResponsibleOffice? khedmehResponsibleOffice; // Assuming you have a KhedmehResponsibleOffice class// Assuming you have a KhadametDetails class
+  final KhedmehResponsibleOffice?
+      khedmehResponsibleOffice; // Assuming you have a KhedmehResponsibleOffice class// Assuming you have a KhadametDetails class
 
   Khadamet({
     required this.idKhedmet,
@@ -48,7 +51,7 @@ class Khadamet {
   });
 
   factory Khadamet.fromJson(Map<String, dynamic> json) {
-    var data;
+    Data? data;
     if (json.containsKey('Data') && json['Data'] != null) {
       data = Data.fromJson(json['Data']);
     } else {
@@ -61,8 +64,11 @@ class Khadamet {
       idUser: json['IdUser'],
       khedmehSubject: json['KhedmehSubject'],
       khedmetSubjectDetails: json['KhedmetSubjectDetails'],
-      startDate: json['StartDate'] != null ? DateTime.parse(json['StartDate']) : null,
-      importantDate: json['ImportantDate'] != null ? DateTime.parse(json['ImportantDate']) : null,
+      startDate:
+          json['StartDate'] != null ? DateTime.parse(json['StartDate']) : null,
+      importantDate: json['ImportantDate'] != null
+          ? DateTime.parse(json['ImportantDate'])
+          : null,
       endDate: json['EndDate'] != null ? DateTime.parse(json['EndDate']) : null,
       sKhedmehResponsibleOffice: json['S_KhedmehResponsibleOffice'],
       khedmetStatus: json['KhedmetStatus'],
@@ -70,11 +76,21 @@ class Khadamet {
       khedmetCompany: json['KhedmetCompany'],
       khedmetCompanyDetails: json['KhedmetCompanyDetails'],
       data: data,
-      khadametCompany: json['Khadamet_Company'] != null ? KhadametCompany.fromJson(json['Khadamet_Company']) : null,
-      khadametStatus: json['Khadamet_Status'] != null ? KhadametStatus.fromJson(json['Khadamet_Status']) : null,
-      khadametSubject: json['Khadamet_Subject'] != null ? KhadametSubject.fromJson(json['Khadamet_Subject']) : null,
-      khadametType: json['Khadamet_Type'] != null ? KhadametType.fromJson(json['Khadamet_Type']) : null,
-      khedmehResponsibleOffice: json['KhedmehResponsibleOffice'] != null ? KhedmehResponsibleOffice.fromJson(json['KhedmehResponsibleOffice']) : null,
+      khadametCompany: json['Khadamet_Company'] != null
+          ? KhadametCompany.fromJson(json['Khadamet_Company'])
+          : null,
+      khadametStatus: json['Khadamet_Status'] != null
+          ? KhadametStatus.fromJson(json['Khadamet_Status'])
+          : null,
+      khadametSubject: json['Khadamet_Subject'] != null
+          ? KhadametSubject.fromJson(json['Khadamet_Subject'])
+          : null,
+      khadametType: json['Khadamet_Type'] != null
+          ? KhadametType.fromJson(json['Khadamet_Type'])
+          : null,
+      khedmehResponsibleOffice: json['KhedmehResponsibleOffice'] != null
+          ? KhedmehResponsibleOffice.fromJson(json['KhedmehResponsibleOffice'])
+          : null,
     );
   }
 }

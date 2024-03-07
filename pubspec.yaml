@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.1.5 <4.0.0'
+  sdk: '>=3.1.4 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -39,6 +39,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^1.1.0
   flutter_svg: ^2.0.9
+  loading_indicator: ^3.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -58,6 +59,11 @@ flutter:
   generate: true
   assets:
     - assets/img/header-bg.png
+    - assets/img/doubleCircle.png
+    - assets/img/dots.gif
+    - assets/icons/add.png
+    - assets/icons/check.png
+    - assets/icons/deny.png
     - assets/icons/add.svg
     - assets/icons/paper.svg
     - assets/icons/status/waiting.svg

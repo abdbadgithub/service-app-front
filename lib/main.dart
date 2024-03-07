@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:service_app/screens/home.dart';
+import 'package:service_app/screens/login.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,6 +10,7 @@ void main() {
   ]);
   runApp(const MyApp());
 }
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -18,7 +19,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     super.initState();
@@ -37,9 +37,8 @@ class _MyAppState extends State<MyApp> {
         Locale("en", "US"),
         Locale("ar", "AE"), // OR Locale('ar', 'AE') OR Other RTL locales
       ],
-      theme: ThemeData(
-      ),
-      home: const Home(),
+      theme: ThemeData(),
+      home: LoginPage(),
     );
   }
 }

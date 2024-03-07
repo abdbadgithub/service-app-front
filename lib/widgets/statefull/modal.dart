@@ -1,9 +1,11 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:service_app/widgets/ui/TextDesign.dart';
-import '../../classes/khadamet.dart';
 import 'package:http/http.dart' as http;
 import 'package:service_app/constants.dart' as constants;
+import 'package:service_app/widgets/ui/TextDesign.dart';
+
+import '../../classes/khadamet.dart';
 
 void showCustomModalBottomSheet(BuildContext context, int id) {
   showModalBottomSheet(
@@ -66,116 +68,270 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
 
     var screenSize = MediaQuery.of(context).size;
     return Localizations.override(
-        context: context,
-        locale: const Locale('ar'),
-        child: Builder(builder: (context) {
-          return SizedBox(
-              height: screenSize.height * 0.8, // 80% of the screen's height
-              child: Container(
-                margin: const EdgeInsets.only(left: 20, right: 20.0, top: 40.0),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(20.0),
-                      topLeft: Radius.circular(20.0)),
-                  color: modalColor,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        leading: const TextDesign(
-                            text: 'رقم ومكان السجل', type: 'title'),
-                        title: TextDesign(
-                            text:
-                                '$sejelnumber ${data.data!.sejelPlace!.spName}',
-                            type: 'text'),
+      context: context,
+      locale: const Locale('ar'),
+      child: Builder(
+        builder: (context) {
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                    margin:
+                        const EdgeInsets.only(left: 20, right: 20.0, top: 40.0),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(20.0),
                       ),
-                      ListTile(
-                        leading:
-                            const TextDesign(text: 'رقم الهاتف', type: 'title'),
-                        title: TextDesign(
-                            text: data.data!.dataDetails[0].PersonalPhone,
-                            type: 'text'),
+                      color: modalColor,
+                    ),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Column(
+                              children: [
+                                ListTile(
+                                  leading: const TextDesign(
+                                    text: 'رقم ومكان السجل',
+                                    type: 'title',
+                                  ),
+                                  title: TextDesign(
+                                    text:
+                                        '$sejelnumber ${data.data!.sejelPlace!.spName}',
+                                    type: 'text',
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: const TextDesign(
+                                    text: 'رقم الهاتف',
+                                    type: 'title',
+                                  ),
+                                  title: TextDesign(
+                                    text:
+                                        data.data!.dataDetails[0].PersonalPhone,
+                                    type: 'text',
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: const TextDesign(
+                                    text: 'المعرف',
+                                    type: 'title',
+                                  ),
+                                  title: TextDesign(
+                                    text: data.data!.dataDetails[0].mouaref
+                                        .mouarefName,
+                                    type: 'text',
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: const TextDesign(
+                                    text: 'رقم المعرف',
+                                    type: 'title',
+                                  ),
+                                  title: TextDesign(
+                                    text: data.data!.dataDetails[0].mouaref
+                                        .mourefPhone,
+                                    type: 'text',
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: const TextDesign(
+                                    text: 'عنوان السكن',
+                                    type: 'title',
+                                  ),
+                                  title: TextDesign(
+                                    text: data.data!.dataDetails[0].HomeAddress,
+                                    type: 'text',
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: const TextDesign(
+                                    text: 'مسؤول المكتب',
+                                    type: 'title',
+                                  ),
+                                  title: TextDesign(
+                                    text: data.khedmehResponsibleOffice!
+                                        .khedmehResponsibleOffice!,
+                                    type: 'text',
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: const TextDesign(
+                                    text: 'ينتخب',
+                                    type: 'title',
+                                  ),
+                                  title: TextDesign(
+                                    text: data.data?.yantakheb == 0
+                                        ? 'كلا'
+                                        : data.data?.yantakheb == 1
+                                            ? 'نعم'
+                                            : "",
+                                    type: 'text',
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: const TextDesign(
+                                    text: 'مندوب',
+                                    type: 'title',
+                                  ),
+                                  title: TextDesign(
+                                    text: data.data?.mandoub == 0
+                                        ? 'كلا'
+                                        : data.data?.mandoub == 1
+                                            ? 'نعم'
+                                            : "",
+                                    type: 'text',
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: const TextDesign(
+                                    text: 'تاريخ التسجيل',
+                                    type: 'title',
+                                  ),
+                                  title: TextDesign(
+                                    text:
+                                        '${data.startDate!.day}/${data.startDate!.month}/${data.startDate!.year}',
+                                    type: 'text',
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: const TextDesign(
+                                    text: 'تاريخ التنفيذ',
+                                    type: 'title',
+                                  ),
+                                  title: TextDesign(
+                                    text: data.endDate != null
+                                        ? '${data.endDate!.day}/${data.startDate!.month}/${data.startDate!.year}'
+                                        : "لم ينفذ بعد",
+                                    type: 'text',
+                                  ),
+                                ),
+                                ListTile(
+                                  title: const TextDesign(
+                                    text: 'تفاصيل',
+                                    type: 'title',
+                                  ),
+                                  subtitle: TextDesign(
+                                    text: data.khedmetSubjectDetails!,
+                                    type: 'text',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                      ListTile(
-                        leading:
-                            const TextDesign(text: 'المعرف', type: 'title'),
-                        title: TextDesign(
-                            text: data.data!.dataDetails[0].mouaref.mouarefName,
-                            type: 'text'),
+                    )),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  width: MediaQuery.of(context).size.width * .9,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFD9D9D9),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: GestureDetector(
+                              onTap: () {},
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Image.asset(
+                                    'assets/icons/add.png',
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Text(
+                                    'إضافة ملاحظة',
+                                    style: TextStyle(
+                                        color: constants.primaryColor),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      ListTile(
-                        leading:
-                            const TextDesign(text: 'رقم المعرف', type: 'title'),
-                        title: TextDesign(
-                            text: data.data!.dataDetails[0].mouaref.mourefPhone,
-                            type: 'text'),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFD9D9D9),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Image.asset(
+                                  'assets/icons/deny.png',
+                                  width: 24,
+                                  height: 24,
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'رفض',
+                                  style: TextStyle(color: Color(0xFFDE5353)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      ListTile(
-                        leading: const TextDesign(
-                            text: 'عنوان السكن', type: 'title'),
-                        title: TextDesign(
-                            text: data.data!.dataDetails[0].HomeAddress,
-                            type: 'text'),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFD9D9D9),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Image.asset(
+                                  'assets/icons/check.png',
+                                  width: 24,
+                                  height: 24,
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'تنفيذ',
+                                  style: TextStyle(color: Color(0xFF96D580)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      ListTile(
-                        leading: const TextDesign(
-                            text: 'مسؤول المكتب', type: 'title'),
-                        title: TextDesign(
-                            text: data.khedmehResponsibleOffice!
-                                .khedmehResponsibleOffice!,
-                            type: 'text'),
-                      ),
-                      ListTile(
-                        leading: const TextDesign(text: 'ينتخب', type: 'title'),
-                        title: TextDesign(
-                            text: data.data?.yantakheb == 0
-                                ? 'كلا'
-                                : data.data?.yantakheb == 1
-                                    ? 'نعم'
-                                    : "",
-                            type: 'text'),
-                      ),
-                      ListTile(
-                        leading: const TextDesign(text: 'مندوب', type: 'title'),
-                        title: TextDesign(
-                            text: data.data?.mandoub == 0
-                                ? 'كلا'
-                                : data.data?.mandoub == 1
-                                    ? 'نعم'
-                                    : "",
-                            type: 'text'),
-                      ),
-                      ListTile(
-                        leading: const TextDesign(
-                            text: 'تاريخ التسجيل', type: 'title'),
-                        title: TextDesign(
-                            text:
-                                '${data.startDate!.day}/${data.startDate!.month}/${data.startDate!.year}',
-                            type: 'text'),
-                      ),
-                      ListTile(
-                        leading: const TextDesign(
-                            text: 'تاريخ التنفيذ', type: 'title'),
-                        title: TextDesign(
-                            text: data.endDate != null
-                                ? '${data.endDate!.day}/${data.startDate!.month}/${data.startDate!.year}'
-                                : "لم ينفذ بعد",
-                            type: 'text'),
-                      ),
-                      ListTile(
-                        title: const TextDesign(text: 'تفاصيل', type: 'title'),
-                        subtitle: TextDesign(
-                            text: data.khedmetSubjectDetails!, type: 'text'),
-                      ),
-                      // Your dialog content here
-                      // Add more items...
                     ],
                   ),
                 ),
-              ));
-        }));
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 
@@ -188,6 +344,9 @@ Future<Khadamet> fetchServiceDetails(int id) async {
     throw Exception('Failed to load service details');
   }
 }
+
+
+
 
 // Future<void> showCustomModalBottomSheet(BuildContext context, int id) async {
 //   showModalBottomSheet(

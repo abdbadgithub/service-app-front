@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:service_app/screens/login.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
         Locale("ar", "AE"), // OR Locale('ar', 'AE') OR Other RTL locales
       ],
       theme: ThemeData(),
-      home: LoginPage(),
+      home: const LoginPage(),
     );
   }
 }

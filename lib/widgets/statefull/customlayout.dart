@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:service_app/constants.dart' as constants;
 import 'package:service_app/widgets/statefull/header.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'footer.dart';
 
 class CustomLayout extends StatefulWidget {
   final Widget? child;
 
-  const CustomLayout({super.key, this.child});
+  const CustomLayout({Key? key, this.child}) : super(key: key);
 
   @override
   State<CustomLayout> createState() => _CustomLayout();
@@ -34,47 +36,131 @@ class _CustomLayout extends State<CustomLayout> {
         // Use the custom color as the primary swatch
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MaterialApp(
-        home: Scaffold(
-          floatingActionButton: Align(
-            alignment: Alignment.bottomLeft,
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(30, 0, 0, 25),
-              child: FloatingActionButton(
-                onPressed: () {},
-                backgroundColor: constants.primaryColor,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(100),
-                  ),
-                ),
-                child: SvgPicture.asset("assets/icons/add.svg"),
-              ),
-            ),
-          ),
-          body: Localizations.override(
+      home: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showModalBottomSheet(
+              isScrollControlled: true,
               context: context,
-              locale: const Locale('ar'),
-              child: Builder(builder: (context) {
-                return Column(children: <Widget>[
-                  const Header(),
-                  if (widget.child != null)
-                    Expanded(
-                        child: SingleChildScrollView(child: widget.child!)),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+              builder: (BuildContext context) {
+                return Container(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const TextField(
+                        textDirection: TextDirection.rtl,
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFD9D9D9),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        child: GestureDetector(
+                          onTap: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            int idKhedmet = prefs.getInt('idKhedmet') ?? 0;
+                            String? accessToken =
+                                prefs.getString('access_token');
+                            print('Retrieved idKhedmet: $idKhedmet');
+
+                            String url =
+                                'https://service-app.abdallahbadra.com/services/status/rejected/$idKhedmet';
+
+                            try {
+                              http.Response response = await http.put(
+                                Uri.parse(url),
+                                headers: {
+                                  'Authorization': 'Bearer $accessToken',
+                                  'Content-Type': 'application/json',
+                                },
+                              );
+
+                              if (response.statusCode == 200) {
+                                print('HTTP Request successful');
+                                print('Response data: ${response.body}');
+                              } else {
+                                print(
+                                    'HTTP Request failed with status code: ${response.statusCode}');
+                              }
+                            } catch (error) {
+                              print('Error during HTTP Request: $error');
+                            }
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              SizedBox(width: 8),
+                              Text(
+                                'إضافة ملاحظة',
+                                style: TextStyle(
+                                    color: constants.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'aljazira'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ]);
-              })),
-          bottomNavigationBar: Localizations.override(
-            context: context,
-            locale: const Locale('ar'),
-            child: Builder(builder: (context) {
-              return const Footer();
-            }),
+                );
+              },
+            );
+          },
+          backgroundColor: constants.primaryColor,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(100))),
+          child: SvgPicture.asset("assets/icons/add.svg"),
+        ),
+        body: Localizations.override(
+          context: context,
+          locale: const Locale('ar'),
+          child: Builder(
+            builder: (context) {
+              if (widget.child != null) {
+                return Column(
+                  children: <Widget>[
+                    const Header(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: widget.child!,
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    ),
+                  ],
+                );
+              } else {
+                return Column(
+                  children: <Widget>[
+                    const Header(),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    ),
+                  ],
+                );
+              }
+            },
           ),
+        ),
+        bottomNavigationBar: Localizations.override(
+          context: context,
+          locale: const Locale('ar'),
+          child: const Footer(),
         ),
       ),
     );

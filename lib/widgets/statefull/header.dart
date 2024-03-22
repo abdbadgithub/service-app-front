@@ -4,18 +4,29 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
-import 'package:service_app/widgets/statefull/serviceCard.dart';
-import '../../classes/khadametBasic.dart';
 import 'package:service_app/constants.dart' as constants;
+import 'package:service_app/screens/login.dart';
+import 'package:service_app/widgets/statefull/serviceCard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../classes/khadametBasic.dart';
+
 const Duration debounceDuration = Duration(milliseconds: 500);
 
 Future<List<KhadametBasic>?> fetchSearchService(query) async {
-  final response = await http.get(Uri.parse('${constants.api}services/search?query=$query'));
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? accessToken = prefs.getString('access_token');
+  final response = await http.get(
+    Uri.parse('${constants.api}services/search?query=$query'),
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+    },
+  );
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
-    if(response.body.isNotEmpty) {
+    if (response.body.isNotEmpty) {
       List<dynamic> dataJson = json.decode(response.body);
       return dataJson.map((json) => KhadametBasic.fromJson(json)).toList();
     }
@@ -26,6 +37,7 @@ Future<List<KhadametBasic>?> fetchSearchService(query) async {
   }
   return null;
 }
+
 class Header extends StatefulWidget {
   const Header({super.key});
 
@@ -35,13 +47,14 @@ class Header extends StatefulWidget {
 
 class _Header extends State<Header> {
   String? _currentQuery;
-  late Iterable<Widget> _lastOptions = <Widget>[];
+  late final Iterable<Widget> _lastOptions = <Widget>[];
   late final _Debounceable<List<KhadametBasic>, String> _debouncedSearch;
   Future<List<KhadametBasic>?> _search(String query) async {
     _currentQuery = query;
 
     // In a real application, there should be some error handling here.
-    final List<KhadametBasic>? options = await fetchSearchService(_currentQuery!);
+    final List<KhadametBasic>? options =
+        await fetchSearchService(_currentQuery!);
 
     // If another search happened after this one, throw away these options.
     if (_currentQuery != query) {
@@ -51,6 +64,7 @@ class _Header extends State<Header> {
 
     return options;
   }
+
   @override
   void initState() {
     super.initState();
@@ -70,62 +84,92 @@ class _Header extends State<Header> {
       ),
       child: Column(children: <Widget>[
         Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            margin: const EdgeInsets.only(top: 65.0),
-            child: const Align(
-                alignment: Alignment.centerRight,
+          width: MediaQuery.of(context).size.width * 0.9,
+          margin: const EdgeInsets.only(top: 65.0),
+          child: Row(
+            children: [
+              const Expanded(
                 child: Text(
                   'الخدمات',
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30.0,
-                      color: Colors.white,
-                      fontFamily: 'aljazira'),
-                ))),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30.0,
+                    color: Colors.white,
+                    fontFamily: 'aljazira',
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * .5,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                child: SizedBox(
+                  width: 50,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_forward, color: Colors.white),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         Container(
           width: MediaQuery.of(context).size.width * 0.9,
           margin: const EdgeInsets.only(top: 20.0),
           child: SearchAnchor(
               builder: (BuildContext context, SearchController controller) {
-                return SearchBar(
-                  controller: controller,
-                  hintText: 'ابحث عن خدمات او شخص',
-                  padding: const MaterialStatePropertyAll<EdgeInsets>(
-                      EdgeInsets.symmetric(horizontal: 16.0)),
-                  onTap: () {
-                    controller.openView();
-                  },
-                  onChanged: (_) {
-                    controller.openView();
-                  },
-                  leading: const Icon(Icons.search),
-                  trailing: <Widget>[
-                    Tooltip(
-                      message: 'Change brightness mode',
-                      child: IconButton(
-                        icon: SvgPicture.asset("assets/icons/search_settings.svg"),
-                        onPressed: () {  },
-                      ),
-                    )
-                  ],
-                );
-              }, suggestionsBuilder:
-              (BuildContext context, SearchController controller)  async{
-               // _currentQuery = controller.text;
-                final List<KhadametBasic>? options =
+            return SearchBar(
+              controller: controller,
+              hintText: 'ابحث عن خدمات او شخص',
+              padding: const MaterialStatePropertyAll<EdgeInsets>(
+                  EdgeInsets.symmetric(horizontal: 16.0)),
+              onTap: () {
+                controller.openView();
+              },
+              onChanged: (_) {
+                controller.openView();
+              },
+              leading: const Icon(Icons.search),
+              trailing: <Widget>[
+                Tooltip(
+                  message: 'Change brightness mode',
+                  child: IconButton(
+                    icon: SvgPicture.asset("assets/icons/search_settings.svg"),
+                    onPressed: () {},
+                  ),
+                )
+              ],
+            );
+          }, suggestionsBuilder:
+                  (BuildContext context, SearchController controller) async {
+            // _currentQuery = controller.text;
+            final List<KhadametBasic>? options =
                 (await _debouncedSearch(controller.text))?.toList();
-                if (options == null) {
-                  return _lastOptions;
-                }
-                  return options.map((suggestion) =>
-                      ServiceCard(khedme:suggestion));
+            if (options == null) {
+              return _lastOptions;
+            }
+            return options.map((suggestion) => ServiceCard(khedme: suggestion));
           }),
         ),
       ]),
     );
   }
 }
+
 typedef _Debounceable<S, T> = Future<S?> Function(T parameter);
 
 /// Returns a new function that is a debounced version of the given function.

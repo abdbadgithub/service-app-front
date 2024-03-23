@@ -37,6 +37,7 @@ linux
 Miscellaneoustest
 web
 windows
+assets/img
 
 # Symbolication related
 app.*.symbols

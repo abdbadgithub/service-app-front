@@ -22,7 +22,7 @@ class KhadametBasic {
   });
 
   factory KhadametBasic.fromJson(Map<String, dynamic> json) {
-    var data;
+    DataBasic? data;
     if (json.containsKey('Data') && json['Data'] != null) {
       data = DataBasic.fromJson(json['Data']);
     } else {

@@ -163,7 +163,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           ),
           TabBar(
             indicator:
-                CircleTabIndicator(color: constants.primaryColor, radius: 3),
+                const CircleTabIndicator(color: constants.primaryColor, radius: 3),
             dividerColor: Colors.transparent,
             unselectedLabelColor: Colors.grey,
             labelColor: constants.primaryColor,

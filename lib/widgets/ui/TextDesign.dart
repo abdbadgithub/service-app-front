@@ -7,19 +7,21 @@ class TextDesign extends StatelessWidget {
   const TextDesign({super.key, required this.text, required this.type});
   @override
   Widget build(BuildContext context) {
-    if(type == "title")
+    if(type == "title") {
       return
         Text(text, style: const TextStyle(
             fontSize: 14,
             fontFamily: 'aljazira',
             fontWeight: FontWeight.bold),
         );
-     if(type == "text")
-      return Text(text, style: const TextStyle(
+    }
+     if(type == "text") {
+       return Text(text, style: const TextStyle(
       fontSize: 14,
       fontFamily: 'aljazira',
       color: constants.lightGrey,
           fontWeight: FontWeight.normal));
-      return Placeholder();
+     }
+      return const Placeholder();
   }
 }

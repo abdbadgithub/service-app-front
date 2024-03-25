@@ -214,7 +214,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 child: const Text(
                   'تسجيل الدخول',
-                  style: TextStyle(fontSize: 20.0, fontFamily: 'aljazira'),
+                  style: TextStyle(fontSize: 20.0, fontFamily: 'aljazira',color: Colors.white),
                 ),
               ),
             )

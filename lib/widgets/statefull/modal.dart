@@ -309,7 +309,7 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return SizedBox(
-                                            height: 200,
+                                            height: 500,
                                             child: Column(
                                               children: [
                                                 const TextField(

@@ -29,11 +29,10 @@ class _CustomLayout extends State<CustomLayout> {
       ],
       supportedLocales: const [
         Locale("en", "US"),
-        Locale("ar", "AE"), // OR Locale('ar', 'AE') OR Other RTL locales
+        Locale("ar", "AE"),
       ],
       title: 'Fetch Data Example',
       theme: ThemeData(
-        // Use the custom color as the primary swatch
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
@@ -45,6 +44,7 @@ class _CustomLayout extends State<CustomLayout> {
               context: context,
               builder: (BuildContext context) {
                 return Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

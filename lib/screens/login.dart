@@ -176,6 +176,7 @@ class _LoginFormState extends State<LoginForm> {
                 color: Colors.white,
               ),
               child: TextField(
+                obscureText: true,
                 controller: _passwordController,
                 textAlign: TextAlign.right,
                 decoration: InputDecoration(
@@ -214,7 +215,10 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 child: const Text(
                   'تسجيل الدخول',
-                  style: TextStyle(fontSize: 20.0, fontFamily: 'aljazira',color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      fontFamily: 'aljazira',
+                      color: Colors.white),
                 ),
               ),
             )

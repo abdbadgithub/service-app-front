@@ -5,6 +5,34 @@ import 'Khadamet_Type.dart';
 import 'KhedmehResponsibleOffice.dart';
 import 'data.dart';
 
+class KhadametDetailsReply {
+  final int idKhadametDetailsReply;
+  final int idKkhadamet;
+  final DateTime? khadametDetailsImpotantDate;
+  final String khadametDetailsNote;
+  final String rowguid;
+
+  KhadametDetailsReply({
+    required this.idKhadametDetailsReply,
+    required this.idKkhadamet,
+    this.khadametDetailsImpotantDate,
+    required this.khadametDetailsNote,
+    required this.rowguid,
+  });
+
+  factory KhadametDetailsReply.fromJson(Map<String, dynamic> json) {
+    return KhadametDetailsReply(
+      idKhadametDetailsReply: json['ID_KhadametDetailsReply'],
+      idKkhadamet: json['IdKkhadamet'],
+      khadametDetailsImpotantDate: json['khadametdetails_impotantdate'] != null
+          ? DateTime.parse(json['khadametdetails_impotantdate'])
+          : null,
+      khadametDetailsNote: json['khadametdetails_note'],
+      rowguid: json['rowguid'],
+    );
+  }
+}
+
 class Khadamet {
   final int idKhedmet;
   final int idUser;
@@ -18,16 +46,13 @@ class Khadamet {
   final int? khedmetType;
   final int? khedmetCompany;
   final String? khedmetCompanyDetails;
-  final Data? data; // Assuming you have a Data class
-  final KhadametCompany?
-      khadametCompany; // Assuming you have a KhadametCompany class
-  final KhadametStatus?
-      khadametStatus; // Assuming you have a KhadametStatus class
-  final KhadametSubject?
-      khadametSubject; // Assuming you have a KhadametSubject class
-  final KhadametType? khadametType; // Assuming you have a KhadametType class
-  final KhedmehResponsibleOffice?
-      khedmehResponsibleOffice; // Assuming you have a KhedmehResponsibleOffice class// Assuming you have a KhadametDetails class
+  final Data? data;
+  final KhadametCompany? khadametCompany;
+  final KhadametStatus? khadametStatus;
+  final KhadametSubject? khadametSubject;
+  final KhadametType? khadametType;
+  final KhedmehResponsibleOffice? khedmehResponsibleOffice;
+  final List<KhadametDetailsReply>? khadametDetailsReply; // Include this field
 
   Khadamet({
     required this.idKhedmet,
@@ -48,17 +73,23 @@ class Khadamet {
     this.khadametSubject,
     this.khadametType,
     this.khedmehResponsibleOffice,
+    this.khadametDetailsReply, // Initialize this field
   });
 
   factory Khadamet.fromJson(Map<String, dynamic> json) {
+    // Parsing KhadametDetailsReply list
+    List<dynamic> detailsReplyJson = json['KhadametDetailsReply'];
+    List<KhadametDetailsReply> detailsReplyList = detailsReplyJson
+        .map((replyJson) => KhadametDetailsReply.fromJson(replyJson))
+        .toList();
+
     Data? data;
     if (json.containsKey('Data') && json['Data'] != null) {
       data = Data.fromJson(json['Data']);
     } else {
-      // Handle the case where 'data' does not exist or is null
-      // For example, initialize it with a default value or keep it null
-      data = null; // or provide a default value
+      data = null;
     }
+
     return Khadamet(
       idKhedmet: json['IdKhedmet'],
       idUser: json['IdUser'],
@@ -91,6 +122,7 @@ class Khadamet {
       khedmehResponsibleOffice: json['KhedmehResponsibleOffice'] != null
           ? KhedmehResponsibleOffice.fromJson(json['KhedmehResponsibleOffice'])
           : null,
+      khadametDetailsReply: detailsReplyList,
     );
   }
 }

@@ -31,6 +31,23 @@ class ServiceDetailsModal extends StatefulWidget {
 class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
   late Future<Khadamet> futureServiceDetails;
 
+  final TextEditingController _textController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  Future<void> _selectDate() async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      setState(() {
+        _dateController.text = picked.toString().split(" ")[0];
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -238,37 +255,37 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                           fontWeight: FontWeight.bold,
                           fontFamily: 'aljazira'),
                     ),
-                    Container(
-                        width: MediaQuery.of(context).size.width * .85,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20.0),
-                          ),
-                          color: Colors.white,
-                        ),
-                        child: const Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: Text(
-                            'لوريم إيبسوم هو نص شكلي يستخدم في الطباعة والنشر. يعتبر النص الشكلي المعياري في هذه الصناعة منذ القرن الخامس عشر. يتكون من كلمات لاتينية مشوهة بشكل عشوائي.',
-                          ),
-                        )),
+                    SizedBox(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: data.khadametDetailsReply?.length,
+                        itemBuilder: (context, index) {
+                          print(
+                              '---------------------${data.khadametDetailsReply![index].idKhadametDetailsReply}');
+                          return Container(
+                            margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                            width: MediaQuery.of(context).size.width * .85,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20.0),
+                              ),
+                              color: Colors.white,
+                            ),
+                            child: Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: (data.khadametDetailsReply != null &&
+                                        data.khadametDetailsReply!.isNotEmpty)
+                                    ? Text(
+                                        data.khadametDetailsReply![index]
+                                            .khadametDetailsNote,
+                                      )
+                                    : const SizedBox()),
+                          );
+                        },
+                      ),
+                    ),
                     const SizedBox(
                       height: 20,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * .85,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(20.0),
-                        ),
-                        color: Colors.white,
-                      ),
-                      child: const Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: Text(
-                          'لوريم إيبسوم هو نص شكلي يستخدم في الطباعة والنشر. يعتبر النص الشكلي المعياري في هذه الصناعة منذ القرن الخامس عشر. يتكون من كلمات لاتينية مشوهة بشكل عشوائي.',
-                        ),
-                      ),
                     ),
                   ],
                 ),
@@ -303,27 +320,125 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                                   const SizedBox(width: 8),
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.pop(context);
                                       showModalBottomSheet(
                                         isScrollControlled: true,
                                         context: context,
                                         builder: (BuildContext context) {
                                           return SizedBox(
-                                            height: 500,
+                                            height: 700,
                                             child: Column(
                                               children: [
-                                                const TextField(
-                                                  maxLines: null,
+                                                TextField(
+                                                  controller: _dateController,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    labelText: 'التارخ',
+                                                    filled: true,
+                                                    prefixIcon: Icon(
+                                                        Icons.calendar_today),
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide
+                                                                    .none),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide: BorderSide(),
+                                                    ),
+                                                  ),
+                                                  readOnly: true,
+                                                  onTap: () async {
+                                                    DateTime? picked =
+                                                        await showDatePicker(
+                                                      context: context,
+                                                      initialDate:
+                                                          DateTime.now(),
+                                                      firstDate: DateTime(2000),
+                                                      lastDate: DateTime(2100),
+                                                    );
+
+                                                    if (picked != null) {
+                                                      setState(() {
+                                                        _dateController.text =
+                                                            picked
+                                                                .toString()
+                                                                .split(" ")[0];
+                                                      });
+                                                      print(
+                                                          _dateController.text);
+                                                    }
+                                                  },
+                                                ),
+                                                TextField(
+                                                  controller: _textController,
+                                                  minLines: 6,
+                                                  maxLines: 12,
                                                   keyboardType:
                                                       TextInputType.multiline,
-                                                  decoration: InputDecoration(
+                                                  textDirection:
+                                                      TextDirection.rtl,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    labelText: 'أدخل الملاحظة',
                                                     border:
                                                         OutlineInputBorder(),
                                                   ),
                                                 ),
                                                 const SizedBox(height: 20),
                                                 ElevatedButton(
-                                                  onPressed: () {},
+                                                  onPressed: () async {
+                                                    SharedPreferences prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    int idKhedmet =
+                                                        prefs.getInt(
+                                                                'idKhedmet') ??
+                                                            0;
+                                                    String? accessToken =
+                                                        prefs.getString(
+                                                            'access_token');
+                                                    print(
+                                                        'Retrieved idKhedmet: $idKhedmet');
+                                                    try {
+                                                      final response =
+                                                          await http.post(
+                                                        Uri.parse(
+                                                            'https://service-app.abdallahbadra.com/khadametdetails'),
+                                                        headers: <String,
+                                                            String>{
+                                                          'Authorization':
+                                                              'Bearer $accessToken',
+                                                          'Content-Type':
+                                                              'application/json; charset=UTF-8',
+                                                        },
+                                                        body:
+                                                            jsonEncode(<String,
+                                                                dynamic>{
+                                                          'IdKkhadamet':
+                                                              idKhedmet,
+                                                          'khadametdetails_impotantdate':
+                                                              '${_dateController.text}T14:45:00Z',
+                                                          'khadametdetails_note':
+                                                              _textController
+                                                                  .text,
+                                                        }),
+                                                      );
+
+                                                      if (response.statusCode ==
+                                                          201) {
+                                                        print(
+                                                            "Post created successfully");
+                                                      } else {
+                                                        print(
+                                                            'Failed to create post. Error: ${response.body}');
+                                                        throw Exception(
+                                                            'Failed to create post');
+                                                      }
+                                                    } catch (e) {
+                                                      print('Exception: $e');
+                                                    }
+                                                    print(_dateController.text);
+                                                  },
                                                   style:
                                                       ElevatedButton.styleFrom(
                                                     backgroundColor:
@@ -339,27 +454,23 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                                                               20),
                                                     ),
                                                   ),
-                                                  child: GestureDetector(
-                                                    onTap: () async {},
-                                                    child: const Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        SizedBox(width: 8),
-                                                        Text(
-                                                          'إضافة ملاحظة',
-                                                          style: TextStyle(
-                                                              color: constants
-                                                                  .primaryColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontFamily:
-                                                                  'aljazira'),
-                                                        ),
-                                                      ],
-                                                    ),
+                                                  child: const Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: <Widget>[
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        'إضافة ملاحظة',
+                                                        style: TextStyle(
+                                                            color: constants
+                                                                .primaryColor,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontFamily:
+                                                                'aljazira'),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               ],

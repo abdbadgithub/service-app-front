@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:service_app/constants.dart' as constants;
@@ -71,8 +72,8 @@ class _LoginFormState extends State<LoginForm> {
     String url = "https://service-app.abdallahbadra.com/auth/login";
 
     Map<String, String> requestBody = {
-      'UserName': 'sabbagh',
-      'Password': '!@#sabbagh123',
+      'UserName': _usernameController.text,
+      'Password': _passwordController.text,
     };
 
     try {
@@ -102,6 +103,13 @@ class _LoginFormState extends State<LoginForm> {
           MaterialPageRoute(builder: (context) => const SplashScreen()),
         );
       } else {
+        // ignore: use_build_context_synchronously
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.info,
+          animType: AnimType.rightSlide,
+          desc: 'إسم المستخدم أو كلمة السر خطأ',
+        ).show();
         print("Login failed with status code: ${response.statusCode}");
       }
     } catch (e) {

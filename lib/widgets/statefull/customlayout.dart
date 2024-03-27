@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/svg.dart';
@@ -18,6 +20,8 @@ class CustomLayout extends StatefulWidget {
 }
 
 class _CustomLayout extends State<CustomLayout> {
+  final TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,12 +53,49 @@ class _CustomLayout extends State<CustomLayout> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const TextField(
+                      TextField(
+                        controller: TextEditingController(),
+                        minLines: 6,
+                        maxLines: 12,
                         textDirection: TextDirection.rtl,
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          int idKhedmet = prefs.getInt('idKhedmet') ?? 0;
+                          String? accessToken = prefs.getString('access_token');
+                          print('Retrieved idKhedmet: $idKhedmet');
+
+                          String url =
+                              'https://service-app.abdallahbadra.com/notes';
+
+                          try {
+                            String jsonBody = jsonEncode({
+                              "Khadamet_Notes": _controller,
+                            });
+
+                            http.Response response = await http.post(
+                              Uri.parse(url),
+                              headers: {
+                                'Authorization': 'Bearer $accessToken',
+                                'Content-Type': 'application/json',
+                              },
+                              body: jsonBody,
+                            );
+
+                            if (response.statusCode == 201) {
+                              print('HTTP Request successful');
+                              print('Response data: ${response.body}');
+                            } else {
+                              print(
+                                  'HTTP Request failed with status code: ${response.statusCode}');
+                            }
+                          } catch (error) {
+                            print('Error during HTTP Request: $error');
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFD9D9D9),
                           padding: const EdgeInsets.symmetric(
@@ -64,37 +105,6 @@ class _CustomLayout extends State<CustomLayout> {
                           ),
                         ),
                         child: GestureDetector(
-                          onTap: () async {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            int idKhedmet = prefs.getInt('idKhedmet') ?? 0;
-                            String? accessToken =
-                                prefs.getString('access_token');
-                            print('Retrieved idKhedmet: $idKhedmet');
-
-                            String url =
-                                'https://service-app.abdallahbadra.com/services/status/rejected/$idKhedmet';
-
-                            try {
-                              http.Response response = await http.put(
-                                Uri.parse(url),
-                                headers: {
-                                  'Authorization': 'Bearer $accessToken',
-                                  'Content-Type': 'application/json',
-                                },
-                              );
-
-                              if (response.statusCode == 200) {
-                                print('HTTP Request successful');
-                                print('Response data: ${response.body}');
-                              } else {
-                                print(
-                                    'HTTP Request failed with status code: ${response.statusCode}');
-                              }
-                            } catch (error) {
-                              print('Error during HTTP Request: $error');
-                            }
-                          },
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[

@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:http/http.dart' as http;
 import 'package:service_app/constants.dart' as constants;
 import 'package:service_app/widgets/statefull/header.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'footer.dart';
 
@@ -54,7 +50,7 @@ class _CustomLayout extends State<CustomLayout> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextField(
-                        controller: TextEditingController(),
+                        controller: _controller,
                         minLines: 6,
                         maxLines: 12,
                         textDirection: TextDirection.rtl,
@@ -62,39 +58,43 @@ class _CustomLayout extends State<CustomLayout> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () async {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          int idKhedmet = prefs.getInt('idKhedmet') ?? 0;
-                          String? accessToken = prefs.getString('access_token');
-                          print('Retrieved idKhedmet: $idKhedmet');
+                          print('object');
+                          setState(() {
+                            _controller.text = '';
+                          });
+                          // SharedPreferences prefs =
+                          //     await SharedPreferences.getInstance();
+                          // int idKhedmet = prefs.getInt('idKhedmet') ?? 0;
+                          // String? accessToken = prefs.getString('access_token');
+                          // print('Retrieved idKhedmet: $idKhedmet');
 
-                          String url =
-                              'https://service-app.abdallahbadra.com/notes';
+                          // String url =
+                          //     'https://service-app.abdallahbadra.com/notes';
 
-                          try {
-                            String jsonBody = jsonEncode({
-                              "Khadamet_Notes": _controller,
-                            });
+                          // try {
+                          //   String jsonBody = jsonEncode({
+                          //     "Khadamet_Notes": _controller.text,
+                          //   });
 
-                            http.Response response = await http.post(
-                              Uri.parse(url),
-                              headers: {
-                                'Authorization': 'Bearer $accessToken',
-                                'Content-Type': 'application/json',
-                              },
-                              body: jsonBody,
-                            );
+                          //   http.Response response = await http.post(
+                          //     Uri.parse(url),
+                          //     headers: {
+                          //       'Authorization': 'Bearer $accessToken',
+                          //       'Content-Type': 'application/json',
+                          //     },
+                          //     body: jsonBody,
+                          //   );
 
-                            if (response.statusCode == 201) {
-                              print('HTTP Request successful');
-                              print('Response data: ${response.body}');
-                            } else {
-                              print(
-                                  'HTTP Request failed with status code: ${response.statusCode}');
-                            }
-                          } catch (error) {
-                            print('Error during HTTP Request: $error');
-                          }
+                          //   if (response.statusCode == 201) {
+                          //     print('HTTP Request successful');
+                          //     print('Response data: ${response.body}');
+                          //   } else {
+                          //     print(
+                          //         'HTTP Request failed with status code: ${response.statusCode}');
+                          //   }
+                          // } catch (error) {
+                          //   print('Error during HTTP Request: $error');
+                          // }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFD9D9D9),

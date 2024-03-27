@@ -113,6 +113,17 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                           children: [
                             ListTile(
                               leading: const TextDesign(
+                                text: 'الإسم الثلاثي',
+                                type: 'title',
+                              ),
+                              title: TextDesign(
+                                text:
+                                    '${data.data!.name} ${data.data!.midlename}  ${data.data!.lastName}',
+                                type: 'text',
+                              ),
+                            ),
+                            ListTile(
+                              leading: const TextDesign(
                                 text: 'رقم ومكان السجل',
                                 type: 'title',
                               ),
@@ -245,49 +256,73 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                     ),
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'ملاحظات',
-                      style: TextStyle(
-                          color: constants.primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'aljazira'),
-                    ),
-                    SizedBox(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: data.khadametDetailsReply?.length,
-                        itemBuilder: (context, index) {
-                          print(
-                              '---------------------${data.khadametDetailsReply![index].idKhadametDetailsReply}');
-                          return Container(
-                            margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-                            width: MediaQuery.of(context).size.width * .85,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20.0),
-                              ),
-                              color: Colors.white,
-                            ),
-                            child: Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: (data.khadametDetailsReply != null &&
-                                        data.khadametDetailsReply!.isNotEmpty)
-                                    ? Text(
-                                        data.khadametDetailsReply![index]
-                                            .khadametDetailsNote,
-                                      )
-                                    : const SizedBox()),
-                          );
-                        },
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .85,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'ملاحظات',
+                        style: TextStyle(
+                            color: constants.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'aljazira'),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                  ],
+                      SizedBox(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: data.khadametDetailsReply?.length,
+                          itemBuilder: (context, index) {
+                            print(
+                                '---------------------${data.khadametDetailsReply![index].idKhadametDetailsReply}');
+                            return Container(
+                              margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                              width: MediaQuery.of(context).size.width * .85,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20.0),
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  (data.khadametDetailsReply != null &&
+                                          data.khadametDetailsReply!.isNotEmpty)
+                                      ? Text(
+                                          data.khadametDetailsReply![index]
+                                              .khadametDetailsImpotantDate
+                                              .toString(),
+                                          style: const TextStyle(
+                                              color: constants.primaryColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'aljazira'),
+                                        )
+                                      : const SizedBox(),
+                                  Directionality(
+                                      textDirection: TextDirection.rtl,
+                                      child: (data.khadametDetailsReply !=
+                                                  null &&
+                                              data.khadametDetailsReply!
+                                                  .isNotEmpty)
+                                          ? Text(
+                                              data.khadametDetailsReply![index]
+                                                  .khadametDetailsNote,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'aljazira'),
+                                            )
+                                          : const SizedBox()),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),

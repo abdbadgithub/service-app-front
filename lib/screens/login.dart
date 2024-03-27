@@ -108,6 +108,7 @@ class _LoginFormState extends State<LoginForm> {
           context: context,
           dialogType: DialogType.info,
           animType: AnimType.rightSlide,
+          autoHide: const Duration(seconds: 1),
           desc: 'إسم المستخدم أو كلمة السر خطأ',
         ).show();
         print("Login failed with status code: ${response.statusCode}");

@@ -68,7 +68,7 @@ class Data {
     List<Khadamet> khadamet;
     if (json.containsKey('DataDetails') && json['DataDetails'] != null) {
       var dataDetailsList = json['DataDetails'] as List;
-       details = dataDetailsList.map((i) => DataDetails.fromJson(i)).toList();
+      details = dataDetailsList.map((i) => DataDetails.fromJson(i)).toList();
     } else {
       details = []; // or provide a default value
     }
@@ -102,10 +102,16 @@ class Data {
       money: json['Money'],
       cvLink: json['CV_Link'],
       identityLink: json['Identity_Link'],
-      genderData: json['Gender_Data_GenderToGender'] != null ? Gender.fromJson(json['Gender_Data_GenderToGender']) : null,
-      sejelPlace: json['SejelPlace'] != null ? SejelPlace.fromJson(json['SejelPlace']) : null,
-      ta2ifaData: json['Ta2ifa'] != null ? Ta2ifa.fromJson(json['Ta2ifa']) : null,
-      dataDetails: details, khadamet: khadamet,
+      genderData: json['Gender_Data_GenderToGender'] != null
+          ? Gender.fromJson(json['Gender_Data_GenderToGender'])
+          : null,
+      sejelPlace: json['SejelPlace'] != null
+          ? SejelPlace.fromJson(json['SejelPlace'])
+          : null,
+      ta2ifaData:
+          json['Ta2ifa'] != null ? Ta2ifa.fromJson(json['Ta2ifa']) : null,
+      dataDetails: details,
+      khadamet: khadamet,
     );
   }
 }

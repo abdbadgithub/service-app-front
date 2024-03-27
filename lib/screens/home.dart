@@ -19,7 +19,7 @@ Future<String?> readAccessToken() async {
 Future<List<KhadametBasic>> fetchUsersWaiting() async {
   final accessToken = await readAccessToken();
   final response = await http.get(
-    Uri.parse('${constants.api}services/waiting'),
+    Uri.parse('${constants.api}/services/waiting'),
     headers: {'Authorization': 'Bearer $accessToken'},
   );
 
@@ -34,7 +34,7 @@ Future<List<KhadametBasic>> fetchUsersWaiting() async {
 Future<List<KhadametBasic>> fetchUsersRejected() async {
   final accessToken = await readAccessToken();
   final response = await http.get(
-    Uri.parse('${constants.api}services/rejected'),
+    Uri.parse('${constants.api}/services/rejected'),
     headers: {'Authorization': 'Bearer $accessToken'},
   );
 
@@ -49,7 +49,7 @@ Future<List<KhadametBasic>> fetchUsersRejected() async {
 Future<List<KhadametBasic>> fetchUsersDone() async {
   final accessToken = await readAccessToken();
   final response = await http.get(
-    Uri.parse('${constants.api}services/done'),
+    Uri.parse('${constants.api}/services/done'),
     headers: {'Authorization': 'Bearer $accessToken'},
   );
 

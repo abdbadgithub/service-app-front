@@ -69,7 +69,7 @@ class _CustomLayout extends State<CustomLayout> {
                           print('Retrieved idKhedmet: $idKhedmet');
 
                           String url =
-                              'https://service-app.abdallahbadra.com/notes';
+                              '${constants.api}/notes';
 
                           try {
                             String jsonBody = jsonEncode({

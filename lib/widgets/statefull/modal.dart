@@ -403,7 +403,7 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                                                       final response =
                                                           await http.post(
                                                         Uri.parse(
-                                                            'https://service-app.abdallahbadra.com/khadametdetails'),
+                                                            '${constants.api}/khadametdetails'),
                                                         headers: <String,
                                                             String>{
                                                           'Authorization':
@@ -515,7 +515,7 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                                 print('Retrieved idKhedmet: $idKhedmet');
 
                                 String url =
-                                    'https://service-app.abdallahbadra.com/services/status/rejected/$idKhedmet';
+                                    '${constants.api}/services/status/rejected/$idKhedmet';
 
                                 try {
                                   http.Response response = await http.put(
@@ -582,7 +582,7 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                                 print('Retrieved idKhedmet: $idKhedmet');
 
                                 String url =
-                                    'https://service-app.abdallahbadra.com/services/status/done/$idKhedmet';
+                                    '${constants.api}/services/status/done/$idKhedmet';
 
                                 try {
                                   http.Response response = await http.put(
@@ -650,7 +650,7 @@ Future<String?> readAccessToken() async {
 Future<Khadamet> fetchServiceDetails(int id) async {
   final accessToken = await readAccessToken();
   final response = await http.get(
-    Uri.parse('${constants.api}services/$id'),
+    Uri.parse('${constants.api}/services/$id'),
     headers: {'Authorization': 'Bearer $accessToken'},
   );
 

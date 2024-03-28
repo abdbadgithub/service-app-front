@@ -17,7 +17,7 @@ Future<List<KhadametBasic>?> fetchSearchService(query) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? accessToken = prefs.getString('access_token');
   final response = await http.get(
-    Uri.parse('${constants.api}services/search?query=$query'),
+    Uri.parse('${constants.api}/services/search?query=$query'),
     headers: {
       'Authorization': 'Bearer $accessToken',
     },

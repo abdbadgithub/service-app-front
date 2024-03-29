@@ -531,7 +531,63 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                       Row(
                         children: [
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title:
+                                      const Text('هل تريد جعل الخدمة مرفوضة؟'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('إلغاء'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        int idKhedmet =
+                                            prefs.getInt('idKhedmet') ?? 0;
+                                        String? accessToken =
+                                            prefs.getString('access_token');
+                                        print(
+                                            'Retrieved idKhedmet: $idKhedmet');
+
+                                        String url =
+                                            '${constants.api}/services/status/rejected/$idKhedmet';
+
+                                        try {
+                                          http.Response response =
+                                              await http.put(
+                                            Uri.parse(url),
+                                            headers: {
+                                              'Authorization':
+                                                  'Bearer $accessToken',
+                                              'Content-Type':
+                                                  'application/json',
+                                            },
+                                          );
+
+                                          if (response.statusCode == 200) {
+                                            Navigator.of(context).pop();
+                                          } else {
+                                            print(
+                                                'HTTP Request failed with status code: ${response.statusCode}');
+                                          }
+                                        } catch (error) {
+                                          print(
+                                              'Error during HTTP Request: $error');
+                                        }
+                                      },
+                                      child: const Text('تأكيد'),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFD9D9D9),
                               padding: const EdgeInsets.symmetric(
@@ -540,56 +596,23 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            child: GestureDetector(
-                              onTap: () async {
-                                SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
-                                int idKhedmet = prefs.getInt('idKhedmet') ?? 0;
-                                String? accessToken =
-                                    prefs.getString('access_token');
-                                print('Retrieved idKhedmet: $idKhedmet');
-
-                                String url =
-                                    '${constants.api}/services/status/rejected/$idKhedmet';
-
-                                try {
-                                  http.Response response = await http.put(
-                                    Uri.parse(url),
-                                    headers: {
-                                      'Authorization': 'Bearer $accessToken',
-                                      'Content-Type': 'application/json',
-                                    },
-                                  );
-
-                                  if (response.statusCode == 200) {
-                                    print('HTTP Request successful');
-                                    print('Response data: ${response.body}');
-                                  } else {
-                                    print(
-                                        'HTTP Request failed with status code: ${response.statusCode}');
-                                  }
-                                } catch (error) {
-                                  print('Error during HTTP Request: $error');
-                                }
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Image.asset(
-                                    'assets/icons/deny.png',
-                                    width: 24,
-                                    height: 24,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Text(
-                                    'رفض',
-                                    style: TextStyle(
-                                        color: Color(0xFFDE5353),
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'aljazira'),
-                                  ),
-                                ],
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Image.asset(
+                                  'assets/icons/deny.png',
+                                  width: 24,
+                                  height: 24,
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'رفض',
+                                  style: TextStyle(
+                                      color: Color(0xFFDE5353),
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'aljazira'),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -597,7 +620,62 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                       Row(
                         children: [
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text(
+                                      'هل تريد جعل الخدمة تم تنفيذها؟'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('إلغاء'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        int idKhedmet =
+                                            prefs.getInt('idKhedmet') ?? 0;
+                                        String? accessToken =
+                                            prefs.getString('access_token');
+                                        print(
+                                            'Retrieved idKhedmet: $idKhedmet');
+                                        String url =
+                                            '${constants.api}/services/status/done/$idKhedmet';
+
+                                        try {
+                                          http.Response response =
+                                              await http.put(
+                                            Uri.parse(url),
+                                            headers: {
+                                              'Authorization':
+                                                  'Bearer $accessToken',
+                                              'Content-Type':
+                                                  'application/json',
+                                            },
+                                          );
+
+                                          if (response.statusCode == 200) {
+                                            Navigator.of(context).pop();
+                                          } else {
+                                            print(
+                                                'HTTP Request failed with status code: ${response.statusCode}');
+                                          }
+                                        } catch (error) {
+                                          print(
+                                              'Error during HTTP Request: $error');
+                                        }
+                                      },
+                                      child: const Text('تأكيد'),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFD9D9D9),
                               padding: const EdgeInsets.symmetric(
@@ -606,57 +684,23 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            child: GestureDetector(
-                              onTap: () async {
-                                SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
-                                int idKhedmet = prefs.getInt('idKhedmet') ?? 0;
-                                String? accessToken =
-                                    prefs.getString('access_token');
-                                print(accessToken);
-                                print('Retrieved idKhedmet: $idKhedmet');
-
-                                String url =
-                                    '${constants.api}/services/status/done/$idKhedmet';
-
-                                try {
-                                  http.Response response = await http.put(
-                                    Uri.parse(url),
-                                    headers: {
-                                      'Authorization': 'Bearer $accessToken',
-                                      'Content-Type': 'application/json',
-                                    },
-                                  );
-
-                                  if (response.statusCode == 200) {
-                                    print('HTTP Request successful');
-                                    print('Response data: ${response.body}');
-                                  } else {
-                                    print(
-                                        'HTTP Request failed with status code: ${response.statusCode}');
-                                  }
-                                } catch (error) {
-                                  print('Error during HTTP Request: $error');
-                                }
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Image.asset(
-                                    'assets/icons/check.png',
-                                    width: 24,
-                                    height: 24,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Text(
-                                    'تنفيذ',
-                                    style: TextStyle(
-                                        color: Color(0xFF96D580),
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'aljazira'),
-                                  ),
-                                ],
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Image.asset(
+                                  'assets/icons/check.png',
+                                  width: 24,
+                                  height: 24,
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'تنفيذ',
+                                  style: TextStyle(
+                                      color: Color(0xFF96D580),
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'aljazira'),
+                                ),
+                              ],
                             ),
                           ),
                         ],

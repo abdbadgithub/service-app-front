@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:service_app/constants.dart' as constants;
@@ -103,14 +102,9 @@ class _LoginFormState extends State<LoginForm> {
           MaterialPageRoute(builder: (context) => const SplashScreen()),
         );
       } else {
-        // ignore: use_build_context_synchronously
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.info,
-          animType: AnimType.rightSlide,
-          autoHide: const Duration(seconds: 1),
-          desc: 'إسم المستخدم أو كلمة السر خطأ',
-        ).show();
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('إسم المستخدم أو كلمة السر خطأ')));
+
         print("Login failed with status code: ${response.statusCode}");
       }
     } catch (e) {

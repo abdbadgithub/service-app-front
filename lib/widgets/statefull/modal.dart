@@ -335,7 +335,145 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                       Row(
                         children: [
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return SizedBox(
+                                    height: 700,
+                                    child: Column(
+                                      children: [
+                                        TextField(
+                                          controller: _dateController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'التاريخ',
+                                            filled: true,
+                                            prefixIcon:
+                                                Icon(Icons.calendar_today),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide.none),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(),
+                                            ),
+                                          ),
+                                          readOnly: true,
+                                          onTap: () async {
+                                            DateTime? picked =
+                                                await showDatePicker(
+                                              context: context,
+                                              initialDate: DateTime.now(),
+                                              firstDate: DateTime(2000),
+                                              lastDate: DateTime(2100),
+                                            );
+
+                                            if (picked != null) {
+                                              setState(() {
+                                                _dateController.text = picked
+                                                    .toString()
+                                                    .split(" ")[0];
+                                              });
+                                              print(_dateController.text);
+                                            }
+                                          },
+                                        ),
+                                        TextField(
+                                          controller: _textController,
+                                          minLines: 6,
+                                          maxLines: 12,
+                                          keyboardType: TextInputType.multiline,
+                                          decoration: const InputDecoration(
+                                            labelText: 'أدخل الملاحظة',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            int idKhedmet =
+                                                prefs.getInt('idKhedmet') ?? 0;
+                                            String? accessToken =
+                                                prefs.getString('access_token');
+                                            print(
+                                                'Retrieved idKhedmet: $idKhedmet');
+                                            try {
+                                              final response = await http.post(
+                                                Uri.parse(
+                                                    '${constants.api}/khadametdetails'),
+                                                headers: <String, String>{
+                                                  'Authorization':
+                                                      'Bearer $accessToken',
+                                                  'Content-Type':
+                                                      'application/json; charset=UTF-8',
+                                                },
+                                                body: jsonEncode(<String,
+                                                    dynamic>{
+                                                  'IdKkhadamet': idKhedmet,
+                                                  'khadametdetails_impotantdate':
+                                                      '${_dateController.text}T14:45:00Z',
+                                                  'khadametdetails_note':
+                                                      _textController.text,
+                                                }),
+                                              );
+
+                                              if (response.statusCode == 201) {
+                                                setState(() {
+                                                  _dateController.text = '';
+                                                  _textController.text = '';
+                                                });
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      const AlertDialog(
+                                                    title: Text('تم اللإضافة'),
+                                                  ),
+                                                );
+                                              } else {
+                                                print(
+                                                    'Failed to create post. Error: ${response.body}');
+                                                throw Exception(
+                                                    'Failed to create post');
+                                              }
+                                            } catch (e) {
+                                              print('Exception: $e');
+                                            }
+                                            print(_dateController.text);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xFFD9D9D9),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 10),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                          ),
+                                          child: const Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              SizedBox(width: 8),
+                                              Text(
+                                                'إضافة ملاحظة',
+                                                style: TextStyle(
+                                                    color:
+                                                        constants.primaryColor,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'aljazira'),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFD9D9D9),
                               padding: const EdgeInsets.symmetric(
@@ -344,186 +482,23 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Image.asset(
-                                    'assets/icons/add.png',
-                                    width: 24,
-                                    height: 24,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  GestureDetector(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return SizedBox(
-                                            height: 700,
-                                            child: Column(
-                                              children: [
-                                                TextField(
-                                                  controller: _dateController,
-                                                  decoration:
-                                                      const InputDecoration(
-                                                    labelText: 'التارخ',
-                                                    filled: true,
-                                                    prefixIcon: Icon(
-                                                        Icons.calendar_today),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide
-                                                                    .none),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide: BorderSide(),
-                                                    ),
-                                                  ),
-                                                  readOnly: true,
-                                                  onTap: () async {
-                                                    DateTime? picked =
-                                                        await showDatePicker(
-                                                      context: context,
-                                                      initialDate:
-                                                          DateTime.now(),
-                                                      firstDate: DateTime(2000),
-                                                      lastDate: DateTime(2100),
-                                                    );
-
-                                                    if (picked != null) {
-                                                      setState(() {
-                                                        _dateController.text =
-                                                            picked
-                                                                .toString()
-                                                                .split(" ")[0];
-                                                      });
-                                                      print(
-                                                          _dateController.text);
-                                                    }
-                                                  },
-                                                ),
-                                                TextField(
-                                                  controller: _textController,
-                                                  minLines: 6,
-                                                  maxLines: 12,
-                                                  keyboardType:
-                                                      TextInputType.multiline,
-                                                  decoration:
-                                                      const InputDecoration(
-                                                    labelText: 'أدخل الملاحظة',
-                                                    border:
-                                                        OutlineInputBorder(),
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 20),
-                                                ElevatedButton(
-                                                  onPressed: () async {
-                                                    SharedPreferences prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    int idKhedmet =
-                                                        prefs.getInt(
-                                                                'idKhedmet') ??
-                                                            0;
-                                                    String? accessToken =
-                                                        prefs.getString(
-                                                            'access_token');
-                                                    print(
-                                                        'Retrieved idKhedmet: $idKhedmet');
-                                                    try {
-                                                      final response =
-                                                          await http.post(
-                                                        Uri.parse(
-                                                            '${constants.api}/khadametdetails'),
-                                                        headers: <String,
-                                                            String>{
-                                                          'Authorization':
-                                                              'Bearer $accessToken',
-                                                          'Content-Type':
-                                                              'application/json; charset=UTF-8',
-                                                        },
-                                                        body:
-                                                            jsonEncode(<String,
-                                                                dynamic>{
-                                                          'IdKkhadamet':
-                                                              idKhedmet,
-                                                          'khadametdetails_impotantdate':
-                                                              '${_dateController.text}T14:45:00Z',
-                                                          'khadametdetails_note':
-                                                              _textController
-                                                                  .text,
-                                                        }),
-                                                      );
-
-                                                      if (response.statusCode ==
-                                                          201) {
-                                                        print(
-                                                            "Post created successfully");
-                                                      } else {
-                                                        print(
-                                                            'Failed to create post. Error: ${response.body}');
-                                                        throw Exception(
-                                                            'Failed to create post');
-                                                      }
-                                                    } catch (e) {
-                                                      print('Exception: $e');
-                                                    }
-                                                    print(_dateController.text);
-                                                  },
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        const Color(0xFFD9D9D9),
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 15,
-                                                        vertical: 10),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                    ),
-                                                  ),
-                                                  child: const Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: <Widget>[
-                                                      SizedBox(width: 8),
-                                                      Text(
-                                                        'إضافة ملاحظة',
-                                                        style: TextStyle(
-                                                            color: constants
-                                                                .primaryColor,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontFamily:
-                                                                'aljazira'),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: const Text(
-                                      'إضافة ملاحظة',
-                                      style: TextStyle(
-                                          color: constants.primaryColor,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'aljazira'),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Image.asset(
+                                  'assets/icons/add.png',
+                                  width: 24,
+                                  height: 24,
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'إضافة ملاحظة',
+                                  style: TextStyle(
+                                      color: constants.primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'aljazira'),
+                                ),
+                              ],
                             ),
                           ),
                         ],

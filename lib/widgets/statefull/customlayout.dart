@@ -89,7 +89,12 @@ class _CustomLayout extends State<CustomLayout> {
                             );
 
                             if (response.statusCode == 201) {
-                              print('HTTP Request successful');
+                              showDialog(
+                                context: context,
+                                builder: (context) => const AlertDialog(
+                                  title: Text('تم اللإضافة'),
+                                ),
+                              );
                               print('Response data: ${response.body}');
                             } else {
                               print(

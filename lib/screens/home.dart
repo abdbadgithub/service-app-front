@@ -61,6 +61,30 @@ Future<List<KhadametBasic>> fetchUsersDone() async {
   }
 }
 
+Future<List<dynamic>> fetchStats() async {
+  try {
+    final accessToken = await readAccessToken();
+    final response = await http.get(
+      Uri.parse('${constants.api}/services/count'),
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      final int countWaiting = data['count_waiting'];
+      final int countDone = data['count_done'];
+
+      return [countWaiting, countDone];
+    } else {
+      print('Failed to fetch statistics: ${response.statusCode}');
+      return [];
+    }
+  } catch (e) {
+    print('Error fetching statistics: $e');
+    return [];
+  }
+}
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -72,6 +96,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   late Future<List<KhadametBasic>> futureKhadametWaiting;
   late Future<List<KhadametBasic>> futureKhadametRejected;
   late Future<List<KhadametBasic>> futureKhadametDone;
+  late Future<List<dynamic>> futureStats;
+
   late TabController _tabController;
 
   @override
@@ -81,6 +107,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     futureKhadametWaiting = fetchUsersWaiting();
     futureKhadametRejected = fetchUsersRejected();
     futureKhadametDone = fetchUsersDone();
+    futureStats = fetchStats();
   }
 
   @override
@@ -101,21 +128,46 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     color: constants.primaryColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        '10',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      FutureBuilder(
+                        future: fetchStats(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            final List<dynamic>? data = snapshot.data;
+
+                            if (data != null && data.isNotEmpty) {
+                              return Text(
+                                data[0].toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            } else {
+                              return const Text(
+                                "No data",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            }
+                          }
+                        },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      const Text(
                         'خدمة جديدة',
                         style: TextStyle(
                             color: Colors.white,
@@ -133,21 +185,46 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     borderRadius: BorderRadius.circular(
                         10), // Adjust the radius as needed
                   ),
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        '55',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      FutureBuilder(
+                        future: fetchStats(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            final List<dynamic>? data = snapshot.data;
+
+                            if (data != null && data.isNotEmpty) {
+                              return Text(
+                                data[1].toString(),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            } else {
+                              return const Text(
+                                "No data",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            }
+                          }
+                        },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      const Text(
                         'خدمة غير منفذة',
                         style: TextStyle(
                             color: Colors.grey,
@@ -162,8 +239,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             ),
           ),
           TabBar(
-            indicator:
-                const CircleTabIndicator(color: constants.primaryColor, radius: 3),
+            indicator: const CircleTabIndicator(
+                color: constants.primaryColor, radius: 3),
             dividerColor: Colors.transparent,
             unselectedLabelColor: Colors.grey,
             labelColor: constants.primaryColor,
@@ -212,7 +289,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 10,
                                 0,
                                 kFloatingActionButtonMargin +
-                                    90.0), // Adjust the padding as needed
+                                    150.0), // Adjust the padding as needed
                             itemCount: snapshot.data!.length,
                             itemBuilder: (context, index) {
                               // Pass the Data object to the ServiceCard widget

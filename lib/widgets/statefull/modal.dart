@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:service_app/constants.dart' as constants;
+import 'package:service_app/globals.dart';
 import 'package:service_app/screens/home.dart';
 import 'package:service_app/widgets/ui/TextDesign.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,6 +59,9 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(DataController());
+    final DataController dataController = Get.find<DataController>();
+
     return FutureBuilder<Khadamet>(
       future: futureServiceDetails,
       builder: (context, snapshot) {
@@ -274,8 +279,6 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                           shrinkWrap: true,
                           itemCount: data.khadametDetailsReply?.length,
                           itemBuilder: (context, index) {
-                            print(
-                                '---------------------${data.khadametDetailsReply![index].idKhadametDetailsReply}');
                             return Container(
                               margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
                               width: MediaQuery.of(context).size.width * .85,

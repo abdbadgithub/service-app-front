@@ -168,7 +168,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         height: 10,
                       ),
                       const Text(
-                        'خدمة جديدة',
+                        'أنجزت',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -182,8 +182,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   width: 130,
                   height: 100,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                        10), // Adjust the radius as needed
+                    color: constants.primaryColor,
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -203,7 +203,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                               return Text(
                                 data[1].toString(),
                                 style: const TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontSize: 26,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -225,9 +225,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         height: 10,
                       ),
                       const Text(
-                        'خدمة غير منفذة',
+                        'قيد الإنجاز',
                         style: TextStyle(
-                            color: Colors.grey,
+                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'aljazira'),
@@ -329,7 +329,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 10,
                                 0,
                                 kFloatingActionButtonMargin +
-                                    90.0), // Adjust the padding as needed
+                                    150.0), // Adjust the padding as needed
                             itemCount: snapshot.data!.length,
                             itemBuilder: (context, index) {
                               // Pass the Data object to the ServiceCard widget
@@ -367,7 +367,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 10,
                                 0,
                                 kFloatingActionButtonMargin +
-                                    90.0), // Adjust the padding as needed
+                                    150.0), // Adjust the padding as needed
                             itemCount: snapshot.data!.length,
                             itemBuilder: (context, index) {
                               // Pass the Data object to the ServiceCard widget

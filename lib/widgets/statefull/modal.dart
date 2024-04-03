@@ -273,8 +273,7 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                         ),
                         ListView.builder(
                           shrinkWrap: true,
-                          physics:
-                              const NeverScrollableScrollPhysics(), // Disable scrolling of the ListView itself
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: data.khadametDetailsReply?.length,
                           itemBuilder: (context, index) {
                             return Container(

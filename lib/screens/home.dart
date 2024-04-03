@@ -74,7 +74,7 @@ Future<List<dynamic>> fetchStats() async {
       final int countWaiting = data['count_waiting'];
       final int countDone = data['count_done'];
 
-      return [countWaiting, countDone];
+      return [countDone, countWaiting];
     } else {
       print('Failed to fetch statistics: ${response.statusCode}');
       return [];

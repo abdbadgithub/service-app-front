@@ -57,7 +57,6 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder<Khadamet>(
       future: futureServiceDetails,
       builder: (context, snapshot) {
@@ -260,19 +259,22 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * .85,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'ملاحظات',
-                        style: TextStyle(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'ملاحظات',
+                          style: TextStyle(
                             color: constants.primaryColor,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'aljazira'),
-                      ),
-                      SizedBox(
-                        child: ListView.builder(
+                            fontFamily: 'aljazira',
+                          ),
+                        ),
+                        ListView.builder(
                           shrinkWrap: true,
+                          physics:
+                              const NeverScrollableScrollPhysics(), // Disable scrolling of the ListView itself
                           itemCount: data.khadametDetailsReply?.length,
                           itemBuilder: (context, index) {
                             return Container(
@@ -286,43 +288,42 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  (data.khadametDetailsReply != null &&
-                                          data.khadametDetailsReply!.isNotEmpty)
-                                      ? Text(
-                                          (data.khadametDetailsReply![index]
-                                                      .khadametDetailsImpotantDate !=
-                                                  null)
-                                              ? DateFormat('yyyy-MM-dd').format(data
-                                                  .khadametDetailsReply![index]
-                                                  .khadametDetailsImpotantDate!)
-                                              : '', // Empty string if the date is null
-                                          style: const TextStyle(
-                                            color: constants.primaryColor,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'aljazira',
-                                          ),
-                                        )
-                                      : const SizedBox(),
-                                  (data.khadametDetailsReply != null &&
-                                          data.khadametDetailsReply!.isNotEmpty)
-                                      ? Text(
-                                          data.khadametDetailsReply![index]
-                                              .khadametDetailsNote,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily: 'aljazira'),
-                                        )
-                                      : const SizedBox(),
+                                  if (data.khadametDetailsReply != null &&
+                                      data.khadametDetailsReply!.isNotEmpty)
+                                    Text(
+                                      (data.khadametDetailsReply![index]
+                                                  .khadametDetailsImpotantDate !=
+                                              null)
+                                          ? DateFormat('yyyy-MM-dd').format(data
+                                              .khadametDetailsReply![index]
+                                              .khadametDetailsImpotantDate!)
+                                          : '', // Empty string if the date is null
+                                      style: const TextStyle(
+                                        color: constants.primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'aljazira',
+                                      ),
+                                    ),
+                                  if (data.khadametDetailsReply != null &&
+                                      data.khadametDetailsReply!.isNotEmpty)
+                                    Text(
+                                      data.khadametDetailsReply![index]
+                                          .khadametDetailsNote,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'aljazira',
+                                      ),
+                                    ),
                                 ],
                               ),
                             );
                           },
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Container(

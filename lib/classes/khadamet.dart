@@ -10,14 +10,14 @@ class KhadametDetailsReply {
   final int idKkhadamet;
   final DateTime? khadametDetailsImpotantDate;
   final String khadametDetailsNote;
-  final String rowguid;
+  // final String rowguid;
 
   KhadametDetailsReply({
     required this.idKhadametDetailsReply,
     required this.idKkhadamet,
     this.khadametDetailsImpotantDate,
     required this.khadametDetailsNote,
-    required this.rowguid,
+    // required this.rowguid,
   });
 
   factory KhadametDetailsReply.fromJson(Map<String, dynamic> json) {
@@ -28,7 +28,7 @@ class KhadametDetailsReply {
           ? DateTime.parse(json['khadametdetails_impotantdate'])
           : null,
       khadametDetailsNote: json['khadametdetails_note'],
-      rowguid: json['rowguid'],
+      // rowguid: json['rowguid'],
     );
   }
 }

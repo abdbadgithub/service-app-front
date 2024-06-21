@@ -426,8 +426,20 @@ class _ServiceDetailsModalState extends State<ServiceDetailsModal> {
                                                 showDialog(
                                                   context: context,
                                                   builder: (context) =>
-                                                      const AlertDialog(
-                                                    title: Text('تم اللإضافة'),
+                                                      AlertDialog(
+                                                    title: const Text(
+                                                        'تم الإضافة'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop(); // Close the dialog
+                                                          (context as Element)
+                                                              .reassemble(); // Refresh the context
+                                                        },
+                                                        child: const Text('OK'),
+                                                      ),
+                                                    ],
                                                   ),
                                                 );
                                               } else {
